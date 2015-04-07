@@ -115,12 +115,14 @@ def undo():
 		UNDO_STACK.pop()
 		display(UNDO_STACK[-1])
 
-def rungui(redteam=None, blueteam=None):
+def rungui(redteam=None, blueteam=None, boardSize=4):
 	# Override the bots if provided
+	global BOARD_SIZE, BOTS
 	if redteam:
 		BOTS['red'] = redteam
 	if blueteam:
 		BOTS['blue'] = blueteam
+	BOARD_SIZE = boardSize
 
 	toolbar = Frame(master, width=w, height=h+20)
 	toolbar.pack(side=BOTTOM)

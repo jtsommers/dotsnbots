@@ -10,12 +10,14 @@ wins = defaultdict(lambda: 0)
 
 BOARD_SIZE = 4
 
-def runsim(rounds, redteam=None, blueteam=None):
+def runsim(rounds, redteam=None, blueteam=None, boardSize=4):
 	# Override the bots if provided
+	global BOARD_SIZE, BOTS
 	if redteam:
 		BOTS['red'] = redteam
 	if blueteam:
 		BOTS['blue'] = blueteam
+	BOARD_SIZE = boardSize
 
 	for i in range(rounds):
 

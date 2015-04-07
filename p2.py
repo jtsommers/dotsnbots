@@ -38,6 +38,7 @@ Examples:   (1) python %prog
 	parser.add_option('-r', '--red', help=default('Red team AI module'), default='first_bot')
 	parser.add_option('-b', '--blue', help=default('Blue team AI module'), default='first_bot')
 	parser.add_option('-n', '--numGames', help='Simulate NUMGAMES between AI modules (no GUI)', type='int', default=1)
+	parser.add_option('-s', '--boardSize', help='Size of the game board', type='int', default=4)
 
 	(options, args) = parser.parse_args()
 
@@ -47,7 +48,7 @@ Examples:   (1) python %prog
 
 	if options.numGames > 1:
 		# Run simulations for multiple games
-		runsim(options.numGames, red_bot, blue_bot)
+		runsim(options.numGames, red_bot, blue_bot, options.boardSize)
 	else:
 		# Play in GUI
-		rungui(red_bot, blue_bot)
+		rungui(red_bot, blue_bot, options.boardSize)
