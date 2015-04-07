@@ -1,10 +1,25 @@
 from Tkinter import *
 from p2_game import Game, State
 
+# Default bots, overridden by redteam and blueteam
 import first_bot as red_bot
 import first_bot as blue_bot
 BOTS = {'red': red_bot, 'blue': blue_bot}
 
+master = Tk()
+
+UNDO_STACK = []
+RED_AI = IntVar(master)
+BLUE_AI = IntVar(master)
+AI_THOUGHTS = StringVar(master)
+BOARD_SIZE = 4
+
+master.title("Dots and Boxes")
+
+w = 600
+h = 600
+
+canvas = Canvas(master, width=w, height=h)
 
 def display(state):
 
@@ -90,7 +105,7 @@ def think(state):
 
 
 def restart():
-	game = Game(4)
+	game = Game(BOARD_SIZE)
 	initial_state = State(game)
 	UNDO_STACK[:] = [initial_state]
 	display(initial_state)
@@ -100,39 +115,35 @@ def undo():
 		UNDO_STACK.pop()
 		display(UNDO_STACK[-1])
 
-master = Tk()
+def rungui(redteam=None, blueteam=None):
+	# Override the bots if provided
+	if redteam:
+		BOTS['red'] = redteam
+	if blueteam:
+		BOTS['blue'] = blueteam
 
-UNDO_STACK = []
-RED_AI = IntVar(master)
-BLUE_AI = IntVar(master)
-AI_THOUGHTS = StringVar(master)
+	toolbar = Frame(master, width=w, height=h+20)
+	toolbar.pack(side=BOTTOM)
 
-master.title("Dots and Boxes")
+	undo_btn = Button(toolbar, text="Undo", command=undo)
+	undo_btn.pack(side=LEFT)
 
-w = 600
-h = 600
+	restart_btn = Button(toolbar, text="Restart", command=restart)
+	restart_btn.pack(side=LEFT)
 
-toolbar = Frame(master, width=w, height=h+20)
-toolbar.pack(side=BOTTOM)
+	red_ai_btn = Checkbutton(toolbar, text="Red AI", variable=RED_AI)
+	red_ai_btn.pack(side=LEFT)
+	blue_ai_btn = Checkbutton(toolbar, text="Blue AI", variable=BLUE_AI)
+	blue_ai_btn.pack(side=LEFT)
 
-undo_btn = Button(toolbar, text="Undo", command=undo)
-undo_btn.pack(side=LEFT)
+	ai_thoughts_ent = Entry(toolbar, textvariable=AI_THOUGHTS, state=DISABLED, width=50)
+	ai_thoughts_ent.pack(side=LEFT)
 
-restart_btn = Button(toolbar, text="Restart", command=restart)
-restart_btn.pack(side=LEFT)
+	canvas.pack(side=RIGHT)
 
-red_ai_btn = Checkbutton(toolbar, text="Red AI", variable=RED_AI)
-red_ai_btn.pack(side=LEFT)
-blue_ai_btn = Checkbutton(toolbar, text="Blue AI", variable=BLUE_AI)
-blue_ai_btn.pack(side=LEFT)
+	restart()
 
-ai_thoughts_ent = Entry(toolbar, textvariable=AI_THOUGHTS, state=DISABLED, width=50)
-ai_thoughts_ent.pack(side=LEFT)
+	mainloop()
 
-canvas = Canvas(master, width=w, height=h)
-canvas.pack(side=RIGHT)
-
-restart()
-
-mainloop()
-
+if __name__ == '__main__':
+	rungui()
