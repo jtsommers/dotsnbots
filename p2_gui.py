@@ -99,7 +99,7 @@ def think(state):
 				AI_THOUGHTS.set(line)
 			move = BOTS[state.whos_turn].think(state.copy(), quip)
 			make_move(state, move)
-			AI_THOUGHTS.set("")
+			#AI_THOUGHTS.set("")
 
 	ThinkingThread().start()
 
