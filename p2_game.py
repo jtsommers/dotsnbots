@@ -17,6 +17,7 @@ class State(object):
 	def __init__(self, game):
 		self.game = game
 		self.whos_turn = game.players[0]
+		self.player_just_moved = game.players[-1]
 		self.box_owners = {}
 		self.h_line_owners = {}
 		self.v_line_owners = {}
@@ -24,6 +25,7 @@ class State(object):
 	def copy(self):
 		res = State(self.game)
 		res.whos_turn = self.whos_turn
+		res.player_just_moved = self.player_just_moved
 		res.box_owners = self.box_owners.copy()
 		res.h_line_owners = self.h_line_owners.copy()
 		res.v_line_owners = self.v_line_owners.copy()
@@ -31,6 +33,9 @@ class State(object):
 
 	def get_whos_turn(self):
 		return self.whos_turn
+
+	def get_player_just_moved(self):
+		return self.player_just_moved
 
 	def get_moves(self):
 		h_moves = [('h', h) for h in self.game.h_lines if h not in self.h_line_owners]
@@ -40,6 +45,8 @@ class State(object):
 	def apply_move(self, move):
 
 		orientation, cell = move
+
+		self.player_just_moved = self.whos_turn
 
 		if orientation == 'h':
 			self.h_line_owners[cell] = self.whos_turn
@@ -71,4 +78,10 @@ class State(object):
 	def get_reward(self, who):
 		score = self.get_score()
 		reward = score[who] - score[OPPONENT[who]]
+		# if reward > 0:
+		# 	reward = 1.0
+		# elif reward == 0:
+		# 	reward = 0.5
+		# else:
+		# 	reward = 0.0
 		return reward
