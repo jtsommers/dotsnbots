@@ -16,14 +16,14 @@ class Node:
         self.wins = 0
         self.visits = 0
         self.untriedMoves = state.get_moves() # future child nodes
-        self.playerJustMoved = state.get_whos_turn() # the only part of the state that the Node needs later
+        self.playerJustMoved = state.get_player_just_moved() # the only part of the state that the Node needs later
         
     def UCTSelectChild(self):
         """ Use the UCB1 formula to select a child node. Often a constant UCTK is applied so we have
             lambda c: c.wins/c.visits + UCTK * sqrt(2*log(self.visits)/c.visits to vary the amount of
             exploration versus exploitation.
         """
-        s = max(self.childNodes, key = lambda c: float(c.wins)/c.visits + sqrt(float(2*log(self.visits))/c.visits))
+        s = max(self.childNodes, key=lambda c: float(c.wins) / float(c.visits) + sqrt(2 * log(float(self.visits)) / float(c.visits)))
         return s
     
     def AddChild(self, m, s):
@@ -70,11 +70,12 @@ def UCT(rootstate, think_duration, verbose = False):
     rootnode = Node(state = rootstate)
 
     t_start = time.time()
+    t_now = t_start
     t_deadline = t_start + think_duration
 
     iterations = 0
 
-    while True:
+    while t_now < t_deadline:
         iterations += 1
         node = rootnode
         state = rootstate.copy()
@@ -95,21 +96,20 @@ def UCT(rootstate, think_duration, verbose = False):
             state.apply_move(random.choice(state.get_moves()))
 
         # Backpropagate
+        scores = state.get_score()
         while node != None: # backpropagate from the expanded node and work back to the root node
-            node.Update(state.get_reward(node.playerJustMoved)) # state is terminal. Update node with result from POV of node.playerJustMoved
+            node.Update(scores[node.playerJustMoved]) # state is terminal. Update node with result from POV of node.playerJustMoved
             node = node.parentNode
 
         t_now = time.time()
-        if t_now > t_deadline:
-            break
 
     # Output some information about the tree - can be omitted
-    if (verbose): print rootnode.TreeToString(0)
-    else: print rootnode.ChildrenToString()
+    if (False): print rootnode.TreeToString(0)
+    else: pass#print rootnode.ChildrenToString()
 
     sample_rate = float(iterations)/(t_now - t_start)
 
-    print "Sample rate: ", sample_rate
+    if verbose: print "Sample rate: ", sample_rate
 
-    return max(rootnode.childNodes, key = lambda c: c.visits).move # return the move that was most visited
+    return max(rootnode.childNodes, key=lambda c: c.visits).move # return the move that was most visited
 

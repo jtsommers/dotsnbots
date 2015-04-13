@@ -3,7 +3,6 @@ def think(state, quip):
 	legalMoves = state.get_moves()
 	bestScore = float("-inf")
 	nextMove = None
-	quipString = "Is that all you got?"
 	for move in legalMoves:
 		nextState = state.copy()
 		nextState.apply_move(move)
@@ -13,5 +12,5 @@ def think(state, quip):
 		if (score > bestScore):
 			bestScore = score
 			nextMove = move
-	quip(quipString)
+	if quipString: quip(quipString)
 	return nextMove

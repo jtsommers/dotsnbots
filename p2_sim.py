@@ -11,6 +11,7 @@ wins = defaultdict(lambda: 0)
 BOARD_SIZE = 4
 
 def runsim(rounds, redteam=None, blueteam=None, boardSize=4):
+	wins = defaultdict(lambda: 0)
 	# Override the bots if provided
 	global BOARD_SIZE, BOTS
 	if redteam:
