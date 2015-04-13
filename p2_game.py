@@ -1,3 +1,8 @@
+# Map a player to an opponent
+OPPONENT = {
+	'red':'blue',
+	'blue':'red'
+}
 
 class Game(object):
 	def __init__(self, width):
@@ -62,3 +67,8 @@ class State(object):
 	def get_score(self):
 		return {p: sum([1 for box in self.game.boxes if self.box_owners.get(box) is p]) for p in self.game.players}
 
+	# Add a custom get reward function to return score[who] - score[other]
+	def get_reward(self, who):
+		score = self.get_score()
+		reward = score[who] - score[OPPONENT[who]]
+		return reward

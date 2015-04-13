@@ -137,6 +137,7 @@ def rungui(redteam=None, blueteam=None, boardSize=4):
 	red_ai_btn.pack(side=LEFT)
 	blue_ai_btn = Checkbutton(toolbar, text="Blue AI", variable=BLUE_AI)
 	blue_ai_btn.pack(side=LEFT)
+	BLUE_AI.set(1)
 
 	ai_thoughts_ent = Entry(toolbar, textvariable=AI_THOUGHTS, state=DISABLED, width=50)
 	ai_thoughts_ent.pack(side=LEFT)
