@@ -88,6 +88,15 @@ def make_move(state, move):
 		next_state = state.copy()
 		next_state.apply_move(move)
 		display(next_state)
+		if next_state.is_terminal():
+			try:
+				from pygame import mixer
+				mixer.init()
+				bustin = mixer.Sound('bustin.wav')
+				bustin.play()
+			except ImportError:
+				print "For the full dots and boxes experience install pygame"
+			AI_THOUGHTS.set("BOXIN' MAKES ME FEEL GOOD!")
 	else:
 		print move, "not in legal moves!"
 
